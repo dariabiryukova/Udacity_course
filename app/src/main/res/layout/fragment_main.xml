@@ -1,0 +1,106 @@
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <View
+        android:id="@+id/centerShim"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"/>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:baseline="@dimen/abc_action_bar_default_height"
+        android:theme="@style/AppTheme"
+        android:src="@drawable/ic_cloudy"
+        android:layout_alignStart="@+id/centerShim"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/highDelLabel"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/today"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:textStyle = "normal"
+        android:textColor="#ff418425"
+        android:id="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/higDegree"
+        android:layout_marginTop="30dp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:id="@+id/highDelLabel"
+        android:gravity="center"
+        android:layout_below="@+id/textView"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:layout_alignParentLeft="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lowDegree"
+        android:layout_marginTop="30dp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:id="@+id/lowDelLabel"
+        android:gravity="center"
+        android:layout_below="@+id/highDelLabel"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:layout_alignParentLeft="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cloudy"
+        android:textStyle="italic"
+        android:textColor="#ff418425"
+        android:textSize="25dp"
+        android:id="@+id/textView3"
+        android:gravity="center"
+        android:layout_alignStart="@+id/centerShim"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/lowDelLabel"/>
+
+
+</RelativeLayout>
+-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/list_view_forecast"
+        android:layout_gravity="right|center_vertical"></ListView>
+
+</FrameLayout>
