@@ -6,12 +6,36 @@
     android:layout_height="match_parent"
    >
 
-    <EditTextPreference
-        android:title="@string/pref_location_label"
-        android:key = "@string/pref_location_key"
-        android:defaultValue= "@string/pref_default_value"
-        android:inputType="text"
-        android:singleLine="true"
-        />
+    <PreferenceCategory
+        android:title="@string/pref_general_locationCategory"
+        android:key = "pref_general_locationCategory">
+
+        <EditTextPreference
+            android:title="@string/pref_location_label"
+            android:key = "@string/pref_location_key"
+            android:defaultValue= "@string/pref_default_value"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+
+         <ListPreference
+            android:dependency="pref_general_locationCategory"
+            android:key="@string/pref_general_TempTypeKey"
+            android:title="@string/pref_general_TempType"
+            android:dialogTitle="@string/pref_general_TempType"
+            android:entries="@array/pref_general_TempEnties"
+            android:entryValues="@array/pref_general_TempValues"
+            android:defaultValue="@string/pref_general_TempUnits_default" />
+
+        <Preference android:title="@string/pref_general_locationMap">
+            <intent android:action="android.intent.action.view"
+                android:data="@string/pref_general_mapURL">
+            </intent>
+
+        </Preference>
+
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

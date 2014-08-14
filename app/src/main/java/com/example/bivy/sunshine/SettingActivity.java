@@ -5,11 +5,14 @@ package com.example.bivy.sunshine;
  */
         import android.content.SharedPreferences;
         import android.os.Bundle;
+        import android.preference.EditTextPreference;
         import android.preference.ListPreference;
         import android.preference.Preference;
         import android.preference.PreferenceActivity;
         import android.preference.PreferenceManager;
         import android.view.KeyEvent;
+
+        import static android.preference.Preference.DEFAULT_ORDER;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -28,10 +31,12 @@ public class SettingActivity extends PreferenceActivity
         // Add 'general' preferences, defined in the XML file
         // TODO: Add preferences from XML
         addPreferencesFromResource(R.xml.pref_general);
+
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
         // TODO: Add preferences
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_general_TempTypeKey)));
     }
 
     /**
@@ -65,7 +70,9 @@ public class SettingActivity extends PreferenceActivity
             }
         } else {
             // For other preferences, set the summary to the value's simple string representation.
-            preference.setSummary(stringValue);
+
+                preference.setSummary(stringValue);
+
         }
         return true;
     }

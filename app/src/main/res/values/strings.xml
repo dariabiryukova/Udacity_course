@@ -10,15 +10,25 @@
     <string name="lowDegree">night 8°</string>
     <string name="cloudy">Cloudy</string>
     <string name="lst_forecast_txt">Today-Sunny-88/63</string>
-    //error msgs    <string name="errorMsg">"Something is wrong!"</string>
+    //error msgs        <string name="errorMsg">"Something is wrong!"</string>
     <string name="errorPositiveBtn">"Continue?"</string>
     <string name="errorNegativeBtn">"Cancel!"</string>
-    //msgs    <string name="positiveBtn">"OK"</string>
+    //msgs        <string name="positiveBtn">"OK"</string>
     <string name="negativeBtn">"Cancel"</string>
     <string name="title_activity_forecast__detailed">Details</string>
     <string name="title_setting_activity">Settings</string>
-    //for preference file
-    <string name="pref_location_label">Location</string>
+    //for preference file    <string name="pref_location_label">Location</string>
     <string name="pref_location_key">location</string>
     <string name="pref_default_value">94043</string>
-   </resources>
+    <string name="pref_general_locationCategory">Location and map</string>
+    <string name="pref_general_locationMap">Map</string>
+    <string name="pref_general_mapURL">https://www.google.co.uk/maps/@51.5286416,-0.1015987,11z</string>
+    <string name="title_activity_web_view__settings_map">WebView_SettingsMap</string>
+    <string name="pref_general_TempUnit">Metric</string>
+    <string name="pref_general_TempUnit_summ">Metric</string>
+    <string name="pref_general_TempType">Pick your units</string>
+    <string name="pref_general_TempUnits_default">metric</string>
+    <string name="pref_general_TempUnits_imperial">imperial</string>
+    <string name="pref_general_TempTypeKey">TempUnit</string>
+
+</resources>

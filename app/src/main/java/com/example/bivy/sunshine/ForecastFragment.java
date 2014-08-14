@@ -1,11 +1,11 @@
 package com.example.bivy.sunshine;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +38,7 @@ public class ForecastFragment extends Fragment {
 
 
     ArrayAdapter<String> mForecastAdapter = null;
+    private static SharedPreferences pref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,33 +56,13 @@ public class ForecastFragment extends Fragment {
 
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            final EditText inputPC = new EditText(getActivity());
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Welcome input a postcode!")
-                    .setMessage("Enter postcode for weather")
-                    .setView(inputPC)
-                    .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                            String postCode = inputPC.getText().toString();
-                            if (!postCode.isEmpty()) {
-                                FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-                                fetchWeatherTask.postCode = postCode;
-                                fetchWeatherTask.execute();
-                            } else {
-
-                            }
-                        }
-                    })
-                    .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            getActivity().finish();
-                        }
-                    }).show();
-
+            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+            fetchWeatherTask.postCode = pref.getString(getString(R.string.pref_location_key), "94043");
+            fetchWeatherTask.unit = pref.getString(getString(R.string.pref_general_TempType), "metric");
+            fetchWeatherTask.execute();
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -93,11 +73,17 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        updateData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        new FetchWeatherTask().execute();
+        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         final ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,14 +97,24 @@ public class ForecastFragment extends Fragment {
                 
             }
         });
+
         return rootView;
+    }
+
+    private void updateData() {
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.postCode = pref.getString(getString(R.string.pref_location_key), "94043");
+        fetchWeatherTask.unit = pref.getString(getString(R.string.pref_general_TempTypeKey), "metric");
+        fetchWeatherTask.execute();
     }
 
     public static class WeatherDataParser {
 
+        private static final String LOG_TAG = "";
+
         /* The date/time conversion code is going to be moved outside the asynctask later,
- * so for convenience we're breaking it out into its own method now.
- */
+         * so for convenience we're breaking it out into its own method now.
+         */
         private String getReadableDateString(long time){
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
@@ -132,6 +128,18 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            String unitType = pref.getString(String.valueOf(R.string.pref_general_TempTypeKey), String.valueOf(R.string.pref_general_TempUnits_default));
+
+            if (unitType.equals(String.valueOf(R.string.pref_general_TempUnits_imperial))) {
+                high = high*1.8 + 32;
+                low = low*1.8 + 32;
+            }
+
+            else if(!unitType.equals(String.valueOf(R.string.pref_general_TempUnits_default))) {
+                Log.d(LOG_TAG, "Unit not found: " + unitType);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
@@ -198,18 +206,19 @@ public class ForecastFragment extends Fragment {
     public class FetchWeatherTask extends AsyncTask<Void, Void, String[]> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-        public String postCode = "";
+        public String postCode;
+        public String unit;
 
-        protected String buildURL(String postcode) {
+        protected String buildURL() {
 
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("http").authority("api.openweathermap.org").appendPath("data")
                     .appendPath("2.5")
                     .appendPath("forecast")
                     .appendPath("daily")
-                    .appendQueryParameter("q", postcode)
+                    .appendQueryParameter("q", postCode)
                     .appendQueryParameter("mode", "json")
-                    .appendQueryParameter("units","metric")
+                    .appendQueryParameter("units", unit)
                     .appendQueryParameter("cnt","7");
 
             return builder.build().toString();
@@ -234,13 +243,13 @@ public class ForecastFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
-            String[] resultString = null;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                String newURL = buildURL("94043");
+
+                String newURL = buildURL();
                 //URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
                 URL url = new URL(newURL);
                 // Create the request to OpenWeatherMap, and open the connection
