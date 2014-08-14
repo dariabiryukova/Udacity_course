@@ -2,6 +2,7 @@ package com.example.bivy.sunshine;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,9 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,6 +84,7 @@ public class ForecastFragment extends Fragment {
 
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -95,9 +99,18 @@ public class ForecastFragment extends Fragment {
 
         new FetchWeatherTask().execute();
 
+        final ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        // These two need to be declared outside the try/catch
-
+                String forecast = mForecastAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), Forecast_Detailed.class);
+                intent.putExtra(Forecast_Detailed.EXTRA_FORECAST, forecast);
+                startActivity(intent);
+                
+            }
+        });
         return rootView;
     }
 
@@ -209,6 +222,7 @@ public class ForecastFragment extends Fragment {
                     R.id.list_item_forecast_textview, strings);
             ListView listView = (ListView) getView().findViewById(R.id.list_view_forecast);
             listView.setAdapter(mForecastAdapter);
+
         }
 
         @Override
@@ -277,13 +291,13 @@ public class ForecastFragment extends Fragment {
 
             try{
                 WeatherDataParser weatherDP = new WeatherDataParser();
-                return weatherDP.getWeatherDataFromJson(forecastJsonStr, 7);
+                String[] strings = weatherDP.getWeatherDataFromJson(forecastJsonStr, 7);
+                return strings;
             }
             catch (JSONException e) {
                 e.printStackTrace();
-
+                return null;
             }
-            return null;
         }
     }
 }
