@@ -9,6 +9,9 @@
     tools:context="com.example.bivy.sunshine.Forecast_Detailed$PlaceholderFragment"
     android:id="@+id/forecast_det_frag">
 
-
+    <TextView
+        android:id = "@+id/det_act_Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

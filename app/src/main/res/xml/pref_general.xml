@@ -23,16 +23,9 @@
             android:key="@string/pref_general_TempTypeKey"
             android:title="@string/pref_general_TempType"
             android:dialogTitle="@string/pref_general_TempType"
-            android:entries="@array/pref_general_TempEnties"
-            android:entryValues="@array/pref_general_TempValues"
+            android:entries="@array/pref_temperature_entries"
+            android:entryValues="@array/pref_temperature_values"
             android:defaultValue="@string/pref_general_TempUnits_default" />
-
-        <Preference android:title="@string/pref_general_locationMap">
-            <intent android:action="android.intent.action.view"
-                android:data="@string/pref_general_mapURL">
-            </intent>
-
-        </Preference>
 
 
     </PreferenceCategory>

@@ -30,5 +30,7 @@
     <string name="pref_general_TempUnits_default">metric</string>
     <string name="pref_general_TempUnits_imperial">imperial</string>
     <string name="pref_general_TempTypeKey">TempUnit</string>
+    <string name="action_map">Map</string>
+    <string name="action_shareWeather">Share weather</string>
 
 </resources>
