@@ -3,7 +3,6 @@ package com.example.bivy.sunshine;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
@@ -50,10 +49,31 @@ public class testDB extends AndroidTestCase {
         long locationRowId;
         locationRowId = db.insert(WeatherContract.Location.TABLE_NAME, null, values);
 
+        // Fantastic.  Now that we have a location, add some weather!
+        ContentValues weatherValues = new ContentValues();
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_LOC_KEY, locationRowId);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATETEXT, "20141205");
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, 1.1);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, 1.2);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, 1.3);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, 75);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, 65);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC, "Asteroids");
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 5.5);
+        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 321);
+
+        //dbHelper.close();
+
+        long weatherRowId;
+        weatherRowId = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, weatherValues);
+
         // Verify we got a row back.
         assertTrue(locationRowId != -1);
         Log.d(LOG_TAG, "New row id: " + locationRowId);
 
+        assertTrue(weatherRowId != -1);
+        Log.d(LOG_TAG, "New row id in weather table: " + weatherRowId);
+//
         // Data's inserted.  IN THEORY.  Now pull some out to stare at it and verify it made
         // the round trip.
 
@@ -66,6 +86,19 @@ public class testDB extends AndroidTestCase {
             WeatherContract.Location.COLUMN_LOCATION_LONG
         };
 
+        String[] weatherColumns = {
+
+        WeatherContract.WeatherEntry.COLUMN_LOC_KEY,
+        WeatherContract.WeatherEntry.COLUMN_DATETEXT,
+        WeatherContract.WeatherEntry.COLUMN_DEGREES,
+        WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
+        WeatherContract.WeatherEntry.COLUMN_PRESSURE,
+        WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+        WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+        WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+        WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
+        WeatherContract.WeatherEntry.COLUMN_WEATHER_ID };
+
         // A cursor is your primary interface to the query results.
         Cursor cursor = db.query(
             WeatherContract.Location.TABLE_NAME,  // Table to Query
@@ -76,6 +109,7 @@ public class testDB extends AndroidTestCase {
             null, // columns to filter by row groups
             null // sort order
         );
+
 
         // If possible, move to the first row of the query results.
         if (cursor.moveToFirst()) {
@@ -89,7 +123,7 @@ public class testDB extends AndroidTestCase {
             int latIndex = cursor.getColumnIndex((WeatherContract.Location.COLUMN_LOCATION_LAT));
             double latitude = cursor.getDouble(latIndex);
 
-            int longIndex = cursor.getColumnIndex((WeatherContract.Location.COLUMN_LOCATIONSETTINGS));
+            int longIndex = cursor.getColumnIndex((WeatherContract.Location.COLUMN_LOCATION_LONG));
             double longitude = cursor.getDouble(longIndex);
 
             // Hooray, data was returned!  Assert that it's the right data, and that the database
@@ -105,6 +139,46 @@ public class testDB extends AndroidTestCase {
             // That's weird, it works on MY machine...
             fail("No values returned :(");
         }
+
+        // A cursor is your primary interface to the query results.
+        Cursor weatherCursor = db.query(
+            WeatherContract.WeatherEntry.TABLE_NAME,  // Table to Query
+            weatherColumns,
+            null, // Columns for the "where" clause
+            null, // Values for the "where" clause
+            null, // columns to group by
+            null, // columns to filter by row groups
+            null // sort order
+        );
+
+
+        if (!weatherCursor.moveToFirst()) {
+            fail("No weather data returned!");
+        }
+
+        assertEquals(weatherCursor.getInt(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_LOC_KEY)), locationRowId);
+        assertEquals(weatherCursor.getString(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATETEXT)), "20141205");
+        assertEquals(weatherCursor.getDouble(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DEGREES)), 1.1);
+        assertEquals(weatherCursor.getDouble(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_HUMIDITY)), 1.2);
+        assertEquals(weatherCursor.getDouble(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_PRESSURE)), 1.3);
+        assertEquals(weatherCursor.getInt(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)), 75);
+        assertEquals(weatherCursor.getInt(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP)), 65);
+        assertEquals(weatherCursor.getString(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)), "Asteroids");
+        assertEquals(weatherCursor.getDouble(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED)), 5.5);
+        assertEquals(weatherCursor.getInt(
+            weatherCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID)), 321);
+
+        weatherCursor.close();
+
     }
 
 }
