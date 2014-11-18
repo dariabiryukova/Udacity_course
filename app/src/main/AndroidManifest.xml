@@ -38,6 +38,9 @@
             android:name=".WebView_SettingsMap"
             android:label="@string/title_activity_web_view__settings_map" >
         </activity>
+        <provider
+            android:authorities="com.example.bivy.sunshine"
+            android:name=".data.WeatherProvider" />
     </application>
 
 </manifest>
