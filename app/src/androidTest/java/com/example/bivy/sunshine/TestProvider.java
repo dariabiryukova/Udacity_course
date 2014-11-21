@@ -1,5 +1,6 @@
 package com.example.bivy.sunshine;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -93,13 +94,14 @@ public class TestProvider extends AndroidTestCase {
         );
 
         TestDB.validateCursor(cursor, testValues);
+        String[] stringWhereClause = new String[] {"1"};
 
         // Now see if we can successfully query if we include the row id
         cursor = mContext.getContentResolver().query(
             WeatherContract.LocationEntry.buildLocationUri(locationRowId),
             null, // leaving "columns" null just returns all the columns.
-            null, // cols for "where" clause
-            null, // values for "where" clause
+            LocationEntry._ID, // cols for "where" clause
+            stringWhereClause, // values for "where" clause
             null  // sort order
         );
 

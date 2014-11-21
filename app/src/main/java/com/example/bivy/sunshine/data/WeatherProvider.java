@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Created by bivy on 23/10/14.
@@ -77,7 +78,7 @@ public class WeatherProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-
+        Log.d("WeatherProvider", uri.toString());
         Cursor retCursor;
         final int match = sUriMatcher.match(uri);
 
@@ -91,6 +92,16 @@ public class WeatherProvider extends ContentProvider {
 
             case WEATHER_WITH_LOCATION:
             {
+//                retCursor = mOpenHelper.getReadableDatabase().query(
+//                        WeatherContract.WeatherEntry.TABLE_NAME,
+//                        projection,
+//                        WeatherContract.WeatherEntry.COLUMN_LOC_KEY + " = " + selection,
+//                        selectionArgs,
+//                        null,
+//                        null,
+//                        sortOrder
+//                );
+
                 retCursor = null;
                 break;
             }
@@ -111,7 +122,7 @@ public class WeatherProvider extends ContentProvider {
             case LOCATION:
             {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        WeatherContract.LocationEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -125,9 +136,9 @@ public class WeatherProvider extends ContentProvider {
             case LOCATION_ID:
             {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                    WeatherContract.WeatherEntry.TABLE_NAME,
+                    WeatherContract.LocationEntry.TABLE_NAME,
                     projection,
-                    WeatherContract.LocationEntry._ID + " = " + ContentUris.parseId(uri) + "'",
+                    selection,
                     selectionArgs,
                     null,
                     null,

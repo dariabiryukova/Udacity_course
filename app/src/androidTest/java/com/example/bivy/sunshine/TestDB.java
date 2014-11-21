@@ -114,7 +114,6 @@ public class TestDB extends AndroidTestCase {
 
     static void validateCursor(Cursor valueCursor, ContentValues expectedValues) {
 
-
        assertTrue(valueCursor.moveToFirst());
 
 
